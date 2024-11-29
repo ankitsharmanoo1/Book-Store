@@ -1,10 +1,13 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import Login from './Login'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
+import toast from 'react-hot-toast'
 
 const Signup = () => {
-
+   const location = useLocation();
+   const navigate = useNavigate();
+   const from = location.state?.from?.pathname || "/";
    const {
       register,
       handleSubmit,
@@ -18,18 +21,23 @@ const Signup = () => {
       password: data.password,
     };
    await axios
-   .post("http//localhost:3000/user/signup",userInfo)
+   .post("http://localhost:3000/user/signup", userInfo)
     .then((res)=>{
       console.log(res.data);
-      if(res.data){
-        alert("signUp Sucessfull")
+      if (res.data){      
+        toast.success("Signup Sucessfully");
+        navigate(from,{replace:true})
       }
-      
+      localStorage.setItem("Users",JSON.stringify(res.data.user))
     }).catch((err)=>{
-      console.log(err);
-      alert("error : "+err)
-    })
-   }
+       if(err.response)
+       {
+        console.log(err);
+        toast.error("Error:"+ err.response.data.message);
+        
+       }
+    });
+   };
    
 
   return (
@@ -91,12 +99,12 @@ const Signup = () => {
              Login
           </button>{" "}
           <Login />
-          </p>
-       </div>
-     </form>
+        </p>
+      </div>
+    </form>
   </div>
+ </div>
 </div>
-    </div>
   )
 }
 
