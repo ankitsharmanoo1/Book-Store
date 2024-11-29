@@ -8,7 +8,7 @@ const Course = () => {
   useEffect(()=>{
       const getBook = async()=>{
         try {
-         let response = await axios.get('http://localhost:3000/book');
+         let response = await axios.get('/book');
          console.log(response.data);
          setBook(response.data)
          

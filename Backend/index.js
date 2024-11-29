@@ -4,13 +4,15 @@ import dotenv from "dotenv";
 import bookRoute from "./Routes/book.route.js"
 import cors from "cors"
 import userroute from "./Routes/user.route.js"
+import path from "path"
+import { fileURLToPath } from "url";
 
 const app = express();
+dotenv.config();
 
 app.use(cors())
 app.use(express.json())
 
-dotenv.config();
 
 const PORT = process.env.PORT || 4000
 const URI = process.env.MongoDBURI;
@@ -34,6 +36,23 @@ try {
 app.use("/book",bookRoute)
 
 app.use("/user",userroute)
+
+
+
+
+
+
+
+
+
+if(process.env.NODE_ENV === "production")
+{
+     const dirPath = path.resolve();
+     app.use(express.static("Frontend/dist"))
+     app.get("*",(req,res) =>{
+           res.sendFile(path.resolve(dirPath,"Frontend","dist","index.html"))
+     })
+}
 
 
 app.listen(PORT,()=>{
